@@ -1,4 +1,5 @@
 import os
+import argparse
 from dotenv import load_dotenv
 from openai import OpenAI
 
@@ -10,6 +11,12 @@ def main():
     if not api_key:
         raise Exception("Key not found")
 
+    parser = argparse.ArgumentParser(description="Chatbot")
+    parser.add_argument("user_prompt", type=str, help="User prompt")
+    parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose output")
+    args = parser.parse_args()
+
+
     client = OpenAI(
         base_url="https://openrouter.ai/api/v1",
         api_key=api_key,
@@ -18,7 +25,7 @@ def main():
     messages = [
         {
             "role": "user",
-            "content": "What is the meaning of life?"
+            "content": args.user_prompt
         }
     ]
 
@@ -27,13 +34,16 @@ def main():
     if not response.usage:
         raise RuntimeError("Failed API Request")
 
-    prompt_tokens = response.usage.prompt_tokens
-    response_tokens = response.usage.completion_tokens
-    total_tokens = response.usage.total_tokens
+    if args.verbose:
+        prompt_tokens = response.usage.prompt_tokens
+        response_tokens = response.usage.completion_tokens
+        total_tokens = response.usage.total_tokens
 
-    print(f"Prompt Tokens: {prompt_tokens}")
-    print(f"Response Tokens: {response_tokens}")
-    print(f"total_tokens: {total_tokens}")
+        print(f"User prompt: {args.user_prompt}")
+        print(f"Prompt tokens: {prompt_tokens}")
+        print(f"Response tokens: {response_tokens}")
+        print(f"Total tokens: {total_tokens}")
+
     print(f"Response: {response.choices[0].message.content}")
 
 if __name__ == "__main__":
