@@ -14,9 +14,20 @@ def get_files_info(working_directory: str, directory: str = ".") -> str:
         if not valid_target_dir:
             return f'Error: Cannot list "{directory}" as it is outside the permitted working directory'
 
-        return f'Success: "{directory}" is within the working directory'
+
+        results = []
+        if directory == ".":
+            directory_name = "current"
+        else:
+            directory_name = f"'{directory}'"
+
+        results.append(f"Result for {directory_name} directory:")
+        for contents in os.listdir(target_dir):
+            target = os.path.join(target_dir, contents)
+            results.append(f"- {contents}: file_size={os.path.getsize(target)} bytes, is_dir={os.path.isdir(target)}")
+
+        return "\n".join(results)
 
     except Exception as e:
         return f"Error: {e}"
-
 
