@@ -16,12 +16,10 @@ def get_file_content(working_directory: str, file_path: str) -> str:
             return f'Error: File not found or is not a regular file: "{file_path}"'
 
         with open(target_file_path) as file:
-            content = file.read(1)
+            content = file.read(MAX_CHARS)
             if file.read(1):
                 content += f'[...File "{file_path}" truncated at {MAX_CHARS:,} characters]'
-
         return content
+
     except Exception as e:
         return f"Error: {e}"
-
-print(get_file_content(".","get_file_contents.py"))

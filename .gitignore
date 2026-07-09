@@ -13,3 +13,4 @@ wheels/
 uv.lock
 .idea
 calculator/lorem.txt
+test_get_file.py
